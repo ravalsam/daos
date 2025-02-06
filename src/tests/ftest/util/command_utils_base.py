@@ -828,6 +828,25 @@ class TelemetryConfig(YamlParameters):
         yaml_data = super().get_yaml_data()
         return yaml_data
 
+    def get_certificate_data(self, name_list):
+        """Get certificate data by name_list.
+        Args:
+            name_list (list): list of certificate attribute names.
+        Returns:
+            data (dict): a dictionary of parameter directory name keys and
+                value.
+        """
+        data = {}
+        for name in name_list:
+            value = getattr(self, name).value
+            if isinstance(value, str):
+                dir_name, file_name = os.path.split(value)
+                if dir_name not in data:
+                    data[dir_name] = [file_name]
+                else:
+                    data[dir_name].append(file_name)
+        return data
+
     def _get_new(self):
         """Get a new object based upon this one.
 
